@@ -30,3 +30,10 @@ const RULES = [
     favicon: "icons/google-sheets.ico"
   }
 ];
+
+// Thả riêng phím Shift → chuyển tab sang trang này
+const SWITCH_URL = "https://chatgpt.com/";
+// Đóng tab bằng phím tắt → mở trang này thay vào (bỏ trống = không mở)
+const DECOY_URL = "https://docs.google.com/document/u/0/";
+// Tắt tiếng tab ngụy trang khi chuyển sang tab khác
+const AUTO_MUTE = true;

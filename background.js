@@ -1,15 +1,40 @@
-importScripts("config.js", "rules.js");
+importScripts(
+  "config.js",
+  "rules.js",
+  "background/closed-tabs.js",
+  "background/tab-closer.js",
+  "background/auto-mute.js"
+);
 
-// Content script yêu cầu đóng tất cả tab thuộc config
-chrome.runtime.onMessage.addListener((msg, sender) => {
-  if (msg?.type !== "closeAll") return;
-  // Đóng ngay tab hiện tại, không chờ gì cả
-  if (sender.tab?.id != null) chrome.tabs.remove(sender.tab.id).catch(() => {});
+let rules = RULES;
+const ready = getRules().then((r) => (rules = r));
 
-  Promise.all([getRules(), chrome.tabs.query({})]).then(([rules, tabs]) => {
-    const ids = tabs
-      .filter((t) => t.id !== sender.tab?.id && findRule(rules, t.url || t.pendingUrl || ""))
-      .map((t) => t.id);
-    if (ids.length) chrome.tabs.remove(ids).catch(() => {});
-  });
+const isTarget = (url) => findRule(rules, url) !== null;
+const closedTabs = createClosedTabs();
+const tabCloser = createTabCloser({ isTarget, getDecoyUrl: () => DECOY_URL, closedTabs });
+const autoMute = createAutoMute({ isTarget, isEnabled: () => AUTO_MUTE });
+
+// Tin nhắn từ content script / popup: thêm loại mới chỉ cần thêm một dòng ở đây
+const HANDLERS = {
+  closeAll: (msg, sender) => tabCloser.closeAll(sender.tab),
+  closedCount: () => closedTabs.count(),
+  restoreClosed: () => closedTabs.restore()
+};
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  const handler = HANDLERS[msg?.type];
+  if (!handler) return;
+  ready
+    .then(() => handler(msg, sender))
+    .then(sendResponse, () => sendResponse(null));
+  return true; // trả lời bất đồng bộ
 });
+
+chrome.storage.onChanged.addListener((changes) => {
+  if (!changes.rules) return;
+  rules = changes.rules.newValue || RULES;
+  autoMute.refresh();
+});
+
+ready.then(autoMute.refresh);
+autoMute.start();
