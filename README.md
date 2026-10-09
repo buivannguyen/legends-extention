@@ -78,6 +78,8 @@ Cuối `config.js` còn vài tuỳ chọn khác:
 | `icons/duolingo.ico` | Duolingo |
 | `icons/elsa.png` | ELSA Speak |
 
+Icon của chính extension là `icons/icon.svg` (bản gốc) và `icons/icon-16/32/48/128.png` render từ đó.
+
 Muốn thêm icon, chép file `.png`, `.ico` hoặc `.svg` vào `icons/` rồi ghi đường dẫn vào `favicon`.
 
 ## Cấu trúc thư mục
