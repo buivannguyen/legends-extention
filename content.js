@@ -167,19 +167,27 @@
       return;
     }
     if (originalTitle === null) originalTitle = document.title;
+    if (rule?.favicon && !next.favicon) document.querySelector(`link[${MARK}]`)?.remove();
+    if (rule?.title && !next.title) document.title = originalTitle;
     rule = next;
     apply();
     startObserver();
   }
 
-  evaluate(RULES);
+  let rules = [];
+  function update(next) {
+    rules = next || RULES;
+    evaluate(rules);
+  }
+  getRules().then(update);
+  chrome.storage.onChanged.addListener((changes) => changes.rules && update(changes.rules.newValue));
 
   // SPA đổi URL không reload trang
   let lastHref = location.href;
   setInterval(() => {
     if (location.href !== lastHref) {
       lastHref = location.href;
-      evaluate(RULES);
+      evaluate(rules);
     }
   }, 1000);
 })();

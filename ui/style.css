@@ -1,0 +1,176 @@
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#fafafa, #131316);
+  --fg: light-dark(#18181b, #f4f4f5);
+  --muted: light-dark(#71717a, #a1a1aa);
+  --line: light-dark(#e4e4e7, #27272a);
+  --field: light-dark(#f0f0f2, #1c1c20);
+  --raised: light-dark(#ffffff, #232328);
+  --accent: light-dark(#2d7a57, #5cb48d);
+  --on-accent: light-dark(#ffffff, #0f1a14);
+  --sans: "Geist", "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[hidden] { display: none !important; }
+
+body {
+  min-width: 600px;
+  margin: 0;
+  padding: 16px 16px 14px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.45 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header: tên bên trái, trạng thái bên phải */
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+#status { margin: 0; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+#status:empty { display: none; }
+#status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+
+/* Bảng rule: chia dòng bằng line, không đóng khung */
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th {
+  position: sticky;
+  top: 0;
+  padding: 0 4px 6px;
+  background: var(--bg);
+  text-align: left;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+th:nth-child(1) { width: 28%; }
+th:nth-child(3) { width: 30%; }
+th:nth-child(4) { width: 32px; }
+td { padding: 5px 2px; border-top: 1px solid var(--line); }
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: var(--field);
+  color: inherit;
+  font: inherit;
+  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+input:hover { border-color: var(--line); }
+input:focus {
+  outline: none;
+  background-color: var(--raised);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+td:first-child input { font: 12px var(--mono); }
+/* Ô favicon: icon xem trước bên trái, đường dẫn mờ đi */
+td:nth-child(3) input {
+  padding-left: 32px;
+  background-repeat: no-repeat;
+  background-position: 9px center;
+  background-size: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+td:nth-child(3) input:focus { color: var(--fg); }
+
+/* Bảng chọn icon, mở ngay dưới ô favicon */
+#icons {
+  position-area: bottom span-right;
+  position-try-fallbacks: flip-block;
+  box-sizing: border-box;
+  width: anchor-size(width);
+  margin: 4px 0;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--raised);
+  color: var(--fg);
+  box-shadow: 0 12px 28px -12px rgb(24 24 27 / 0.22);
+}
+#icons button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12px;
+}
+#icons button:hover, #icons button:focus-visible { outline: none; background: var(--field); }
+#icons img { width: 16px; height: 16px; }
+
+/* Empty state */
+table:has(tbody:empty) thead { display: none; }
+tbody:empty::before {
+  content: "Chưa có rule nào. Thêm rule để đổi tiêu đề và favicon khi mở trang khớp.";
+  display: block;
+  padding: 18px 0 8px;
+  color: var(--muted);
+}
+
+button {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--raised);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+button:hover { border-color: color-mix(in srgb, var(--fg) 25%, transparent); }
+button:active { transform: scale(0.98); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* CTA chính: ngụy trang trang đang mở */
+#add-current {
+  width: 100%;
+  margin-bottom: 14px;
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+  text-align: left;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.15), 0 8px 18px -10px light-dark(#2d7a57, transparent);
+}
+#add-current:hover { background: color-mix(in srgb, var(--accent) 88%, var(--fg)); }
+
+#add {
+  width: 100%;
+  margin-top: 8px;
+  border-style: dashed;
+  background: transparent;
+  color: var(--muted);
+}
+#add:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Nút xoá trong dòng */
+td:last-child button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+}
+td:last-child button:hover { background: var(--field); color: var(--fg); }
+
+/* Vào trang: các khối hiện lần lượt */
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } }
+body > * { animation: rise 0.5s var(--ease) both; }
+body > :nth-child(2) { animation-delay: 40ms; }
+body > :nth-child(3) { animation-delay: 80ms; }
+body > :nth-child(4) { animation-delay: 120ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before { animation: none !important; transition: none !important; }
+}

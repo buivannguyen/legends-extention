@@ -6,9 +6,9 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
   // Đóng ngay tab hiện tại, không chờ gì cả
   if (sender.tab?.id != null) chrome.tabs.remove(sender.tab.id).catch(() => {});
 
-  chrome.tabs.query({}, (tabs) => {
+  Promise.all([getRules(), chrome.tabs.query({})]).then(([rules, tabs]) => {
     const ids = tabs
-      .filter((t) => t.id !== sender.tab?.id && findRule(RULES, t.url || t.pendingUrl || ""))
+      .filter((t) => t.id !== sender.tab?.id && findRule(rules, t.url || t.pendingUrl || ""))
       .map((t) => t.id);
     if (ids.length) chrome.tabs.remove(ids).catch(() => {});
   });
