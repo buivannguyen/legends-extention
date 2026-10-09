@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Học tập vì một tương lai tươi sáng",
   "permissions": [
-    "tabs"
+    "tabs",
+    "storage"
   ],
   "content_scripts": [
     {
@@ -20,6 +21,9 @@
       "all_frames": false
     }
   ],
+  "action": {
+    "default_popup": "ui/page-popup/popup.html"
+  },
   "background": {
     "service_worker": "background.js"
   },

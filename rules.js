@@ -28,3 +28,7 @@ function findRule(rules, href) {
   }
   return rules.find((r) => matchesRule(r.match, url)) || null;
 }
+
+function getRules() {
+  return chrome.storage.local.get({ rules: RULES }).then((d) => d.rules);
+}

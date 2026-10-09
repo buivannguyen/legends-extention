@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Legend's Tab</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <h1>Legend's Tab</h1>
+  <p id="status"></p>
+</header>
+<button id="add-current" hidden></button>
+<table>
+  <thead><tr><th>Match</th><th>Tiêu đề ({title} = tiêu đề gốc)</th><th>Favicon</th><th></th></tr></thead>
+  <tbody></tbody>
+</table>
+<button id="add">+ Thêm rule</button>
+<div id="icons" popover>
+  <button value="icons/google-docs.ico"><img src="../../icons/google-docs.ico" alt="">Google Docs</button>
+  <button value="icons/google-sheets.ico"><img src="../../icons/google-sheets.ico" alt="">Google Sheets</button>
+  <button value="icons/duolingo.ico"><img src="../../icons/duolingo.ico" alt="">Duolingo</button>
+  <button value="icons/elsa.png"><img src="../../icons/elsa.png" alt="">ELSA Speak</button>
+</div>
+<script src="../../config.js"></script>
+<script src="../../rules.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

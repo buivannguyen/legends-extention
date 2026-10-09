@@ -30,7 +30,9 @@ Trong thời đại AI phát triển từng ngày, **học tập** là cách t�
 
 ## Cấu hình
 
-Danh sách trang nằm trong [`config.js`](config.js):
+Bấm icon extension để mở popup: nút **Ngụy trang trang này** thêm nhanh trang đang mở, bảng bên dưới để thêm, sửa, xoá rule. Thay đổi áp dụng ngay, không cần reload. Gõ xong bấm **Enter** để lưu.
+
+[`config.js`](config.js) chỉ là danh sách mặc định, dùng khi chưa lưu rule nào:
 
 ```js
 const RULES = [
@@ -55,7 +57,7 @@ const RULES = [
 
 Với `match`: `example.*` khớp `example.com`, `example.net`, `www.example.xyz`… nhưng không khớp `notexample.com`.
 
-Sau khi sửa cấu hình, vào `chrome://extensions` bấm **Reload** extension rồi tải lại các tab đang mở.
+Sửa `config.js` thì phải vào `chrome://extensions` bấm **Reload**, và chỉ có tác dụng khi chưa lưu rule nào trong popup.
 
 ### Icon có sẵn
 
@@ -76,6 +78,9 @@ Muốn thêm icon, chép file `.png`, `.ico` hoặc `.svg` vào `icons/` rồi g
 ├── rules.js        # Logic so khớp URL, dùng chung cho content script và background
 ├── content.js      # Đổi tiêu đề/favicon, bắt phím tắt
 ├── background.js   # Đóng tab theo yêu cầu từ content script
+├── ui/
+│   ├── style.css       # CSS dùng chung
+│   └── page-popup/     # Bấm icon extension: ngụy trang nhanh + quản lý rule (lưu trong chrome.storage.local)
 └── icons/          # Favicon dùng để ngụy trang
 ```
 
