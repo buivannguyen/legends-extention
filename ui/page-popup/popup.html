@@ -10,7 +10,10 @@
   <h1>Legend's Tab</h1>
   <p id="status"></p>
 </header>
-<button id="add-current" hidden></button>
+<div id="quick">
+  <button id="bookmark-current" hidden>★ Lưu video này</button>
+  <button id="add-current" hidden></button>
+</div>
 <form id="lock" hidden>
   <p id="lock-hint"></p>
   <div>
@@ -21,18 +24,29 @@
   <button id="forgot" type="button" class="link" hidden>Quên mã PIN?</button>
 </form>
 <section id="rules" hidden>
-  <table>
-    <thead><tr><th>Match</th><th>Tiêu đề ({title} = tiêu đề gốc)</th><th>Favicon</th><th></th></tr></thead>
-    <tbody></tbody>
-  </table>
-  <button id="add">+ Thêm rule</button>
-  <footer>
+  <nav id="tabs">
+    <label><input type="radio" name="tab" value="fav" checked>★ Yêu thích</label>
+    <label><input type="radio" name="tab" value="disguise">Ngụy trang</label>
+  </nav>
+  <div id="tab-fav">
+    <ul id="bookmarks"></ul>
+  </div>
+  <div id="tab-disguise">
+    <table>
+      <thead><tr><th>Match</th><th>Tiêu đề ({title} = tiêu đề gốc)</th><th>Favicon</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button id="add">+ Thêm rule</button>
+  </div>
+</section>
+<footer>
+  <button id="restore" class="link" hidden></button>
+  <span id="pin-links">
     <button id="lock-now" class="link"></button>
     <button id="set-pin" class="link"></button>
     <button id="remove-pin" class="link" hidden>Bỏ mã PIN</button>
-  </footer>
-</section>
-<button id="restore" hidden></button>
+  </span>
+</footer>
 <div id="icons" popover>
   <button value="icons/google-docs.ico"><img src="../../icons/google-docs.ico" alt="">Google Docs</button>
   <button value="icons/google-sheets.ico"><img src="../../icons/google-sheets.ico" alt="">Google Sheets</button>

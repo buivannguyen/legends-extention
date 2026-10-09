@@ -131,15 +131,15 @@ button:hover { border-color: color-mix(in srgb, var(--fg) 25%, transparent); }
 button:active { transform: scale(0.98); }
 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* CTA chính: ngụy trang trang đang mở */
+/* Thao tác nhanh cho trang đang mở: luôn hiện, kể cả khi đang khoá */
+#quick { display: flex; gap: 8px; margin-bottom: 14px; }
+#quick:not(:has(button:not([hidden]))) { display: none; }
+#quick button { flex: 1; font-weight: 500; text-align: left; }
+#quick button:disabled { border-color: var(--line); color: var(--muted); cursor: default; transform: none; }
 #add-current {
-  width: 100%;
-  margin-bottom: 14px;
   border-color: transparent;
   background: var(--accent);
   color: var(--on-accent);
-  font-weight: 500;
-  text-align: left;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.15), 0 8px 18px -10px light-dark(#2d7a57, transparent);
 }
 #add-current:hover { background: color-mix(in srgb, var(--accent) 88%, var(--fg)); }
@@ -152,7 +152,49 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   color: var(--muted);
 }
 #add:hover { border-color: var(--accent); color: var(--accent); }
-#restore { width: 100%; margin-top: 8px; }
+
+/* Tab: radio ẩn đi, label làm nút tab, panel nào không được chọn thì ẩn */
+#tabs { display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+#tabs label {
+  margin-bottom: -1px;
+  padding: 6px 10px 8px;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+#tabs label:hover { color: var(--fg); }
+#tabs label:has(:checked) { border-color: var(--accent); color: var(--fg); }
+#tabs label:has(:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 6px 6px 0 0; }
+#tabs input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+#rules:has([value="fav"]:checked) #tab-disguise,
+#rules:has([value="disguise"]:checked) #tab-fav { display: none; }
+
+/* Video yêu thích: bấm tên để mở, mốc thời gian mờ bên phải */
+#bookmarks { margin: 0; padding: 0; list-style: none; }
+#bookmarks li { display: flex; align-items: center; gap: 2px; padding: 3px 0; }
+#bookmarks li + li { border-top: 1px solid var(--line); }
+#bookmarks li button:first-child {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-color: transparent;
+  background: transparent;
+  text-align: left;
+}
+#bookmarks li button:first-child:hover { background: var(--field); }
+#bookmarks li button:first-child:active { transform: none; }
+#bookmarks small { flex: none; font: 12px var(--mono); color: var(--muted); }
+#bookmarks:empty::before {
+  content: "Chưa có video nào. Mở video rồi bấm ★ Lưu video này.";
+  display: block;
+  padding: 18px 0 8px;
+  color: var(--muted);
+}
 
 /* Khoá danh sách rule */
 #lock { padding: 18px 0 8px; border-top: 1px solid var(--line); }
@@ -162,12 +204,16 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #lock-submit { flex: none; border-color: transparent; background: var(--accent); color: var(--on-accent); font-weight: 500; }
 #lock:has(#pin[hidden]) #lock-submit { flex: 1; }
 #lock .link { margin-top: 6px; }
-#rules footer { display: flex; justify-content: flex-end; gap: 4px; margin-top: 6px; }
+/* Chân popup: khôi phục tab bên trái, link khoá/PIN bên phải (chỉ hiện khi đã mở khoá) */
+body > footer { display: flex; align-items: center; gap: 4px; margin-top: 12px; padding-top: 6px; border-top: 1px solid var(--line); }
+#pin-links { display: flex; gap: 4px; margin-left: auto; }
+body:has(#rules[hidden]) #pin-links { display: none; }
+body:has(#rules[hidden]):has(#restore[hidden]) > footer { display: none; }
 button.link { padding: 2px 6px; border-color: transparent; background: transparent; font-size: 12px; color: var(--muted); }
 button.link:hover { color: var(--fg); }
 
 /* Nút xoá trong dòng */
-td:last-child button {
+td:last-child button, #bookmarks li button:last-child {
   width: 28px;
   height: 28px;
   padding: 0;
@@ -175,7 +221,7 @@ td:last-child button {
   background: transparent;
   color: var(--muted);
 }
-td:last-child button:hover { background: var(--field); color: var(--fg); }
+td:last-child button:hover, #bookmarks li button:last-child:hover { background: var(--field); color: var(--fg); }
 
 /* Vào trang: các khối hiện lần lượt */
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } }

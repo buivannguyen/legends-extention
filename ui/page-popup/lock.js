@@ -44,10 +44,10 @@ function createLock() {
     return chrome.storage.local.remove("pin");
   }
 
-  // Quên mã: xoá mã cùng toàn bộ rule, để không ai đọc được danh sách bằng cách đặt mã mới.
+  // Quên mã: xoá mã cùng toàn bộ rule và video yêu thích, để không ai đọc được danh sách bằng cách đặt mã mới.
   // Ghi rules = [] chứ không xoá, nếu không getRules() sẽ trả về danh sách mặc định trong config.js.
   async function reset() {
-    await chrome.storage.local.set({ rules: [] });
+    await chrome.storage.local.set({ rules: [], bookmarks: [] });
     await chrome.storage.local.remove("pin");
     return lock();
   }

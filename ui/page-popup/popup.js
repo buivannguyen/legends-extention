@@ -5,17 +5,51 @@ const icons = document.getElementById("icons");
 const rulesView = document.getElementById("rules");
 const lockForm = document.getElementById("lock");
 const pinInput = document.getElementById("pin");
+const bookmarkList = document.getElementById("bookmarks");
+const bookmarkBtn = document.getElementById("bookmark-current");
 const lock = createLock();
 let rules = [];
+let bookmarks = [];
+let currentTab = null;
 let picking = null;
 
 function save() {
   chrome.storage.local.set({ rules: rules.filter((r) => r.match.trim()) });
 }
 
+// 754 → "12:34", 3754 → "1:02:34"
+const formatTime = (s) => (s ? new Date(s * 1000).toISOString().slice(11, 19).replace(/^0+:?0?/, "") : "");
+
 function render() {
+  // Nút ★ chạy cả khi đang khoá: trang đã lưu thì khoá nút, mốc thời gian tự cập nhật khi xem
+  const isSaved = bookmarks.some((b) => b.url === currentTab?.url);
+  bookmarkBtn.disabled = isSaved;
+  bookmarkBtn.textContent = isSaved ? "✓ Đã lưu" : "★ Lưu video này";
   // Đang khoá thì không dựng bảng, để danh sách không nằm trong DOM
-  if (rulesView.hidden) return tbody.replaceChildren();
+  if (rulesView.hidden) {
+    bookmarkList.replaceChildren();
+    return tbody.replaceChildren();
+  }
+  bookmarkList.replaceChildren(
+    ...bookmarks.map((b, i) => {
+      const li = document.createElement("li");
+      const open = document.createElement("button");
+      const time = document.createElement("small");
+      time.textContent = formatTime(b.time);
+      open.append(b.title, time);
+      open.title = b.url;
+      open.onclick = () => chrome.runtime.sendMessage({ type: "openBookmark", url: b.url, time: b.time });
+      const del = document.createElement("button");
+      del.textContent = "✕";
+      del.onclick = () => {
+        bookmarks.splice(i, 1);
+        chrome.storage.local.set({ bookmarks });
+        render();
+      };
+      li.append(open, del);
+      return li;
+    })
+  );
   tbody.replaceChildren(
     ...rules.map((rule, i) => {
       const tr = document.createElement("tr");
@@ -66,10 +100,17 @@ document.getElementById("add").onclick = () => {
   render();
 };
 
-Promise.all([getRules(), chrome.tabs.query({ active: true, currentWindow: true })]).then(([r, [tab]]) => {
+Promise.all([
+  getRules(),
+  chrome.tabs.query({ active: true, currentWindow: true }),
+  chrome.storage.local.get({ bookmarks: [] })
+]).then(([r, [tab], b]) => {
   rules = r;
+  bookmarks = b.bookmarks;
+  currentTab = tab;
   showDefault();
   if (!/^https?:/.test(tab?.url || "")) return (status.textContent = "Không dùng được trên trang này.");
+  bookmarkBtn.hidden = false;
   if (findRule(rules, tab.url)) return (status.textContent = "Trang này đang được ngụy trang.");
   const host = new URL(tab.url).hostname.replace(/^www\./, "");
   btn.textContent = `+ Ngụy trang trang này (${host})`;
@@ -82,6 +123,18 @@ Promise.all([getRules(), chrome.tabs.query({ active: true, currentWindow: true }
     status.textContent = "Trang này đang được ngụy trang.";
   };
 });
+
+// Lưu trang đang mở vào yêu thích, rồi báo tab bắt đầu tự cập nhật mốc.
+// Tiêu đề lấy từ content script vì tiêu đề tab có thể đang là tiêu đề ngụy trang
+bookmarkBtn.onclick = async () => {
+  bookmarkBtn.disabled = true;
+  const ask = (type) => chrome.tabs.sendMessage(currentTab.id, { type }).catch(() => null);
+  const [title, time] = await Promise.all([ask("realTitle"), ask("videoTime")]);
+  bookmarks.unshift({ url: currentTab.url, title: title || currentTab.title, time });
+  chrome.storage.local.set({ bookmarks });
+  ask("track");
+  render();
+};
 
 // Bảo vệ danh sách rule: có mã PIN thì phải nhập mã, chưa có thì ẩn sẵn, bấm mới hiện
 const lockHint = document.getElementById("lock-hint");
@@ -167,11 +220,12 @@ forgot.onclick = () => {
     delete forgot.dataset.confirm;
     return lock.reset().then(() => getRules()).then((r) => {
       rules = r;
+      bookmarks = [];
       showDefault();
     });
   }
   forgot.dataset.confirm = "1";
-  forgot.textContent = "Bấm lần nữa để xoá mã PIN và toàn bộ rule";
+  forgot.textContent = "Bấm lần nữa để xoá mã PIN, toàn bộ rule và video yêu thích";
 };
 
 // Khôi phục các tab vừa bị đóng bằng phím tắt
