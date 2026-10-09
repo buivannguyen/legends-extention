@@ -11,11 +11,27 @@
   <p id="status"></p>
 </header>
 <button id="add-current" hidden></button>
-<table>
-  <thead><tr><th>Match</th><th>Tiêu đề ({title} = tiêu đề gốc)</th><th>Favicon</th><th></th></tr></thead>
-  <tbody></tbody>
-</table>
-<button id="add">+ Thêm rule</button>
+<form id="lock" hidden>
+  <p id="lock-hint"></p>
+  <div>
+    <input id="pin" type="password" autocomplete="off">
+    <button id="lock-submit"></button>
+  </div>
+  <button id="cancel" type="button" class="link" hidden>Huỷ</button>
+  <button id="forgot" type="button" class="link" hidden>Quên mã PIN?</button>
+</form>
+<section id="rules" hidden>
+  <table>
+    <thead><tr><th>Match</th><th>Tiêu đề ({title} = tiêu đề gốc)</th><th>Favicon</th><th></th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <button id="add">+ Thêm rule</button>
+  <footer>
+    <button id="lock-now" class="link"></button>
+    <button id="set-pin" class="link"></button>
+    <button id="remove-pin" class="link" hidden>Bỏ mã PIN</button>
+  </footer>
+</section>
 <button id="restore" hidden></button>
 <div id="icons" popover>
   <button value="icons/google-docs.ico"><img src="../../icons/google-docs.ico" alt="">Google Docs</button>
@@ -25,6 +41,7 @@
 </div>
 <script src="../../config.js"></script>
 <script src="../../rules.js"></script>
+<script src="lock.js"></script>
 <script src="popup.js"></script>
 </body>
 </html>
