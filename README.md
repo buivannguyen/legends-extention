@@ -13,11 +13,13 @@ Trong thời đại AI phát triển từng ngày, **học tập** là cách t�
 
   | Thao tác | Hành động |
   |---|---|
-  | Bấm rồi thả riêng phím **Ctrl** | Đóng **tất cả** tab thuộc cấu hình |
-  | Bấm **chuột giữa** (con lăn) | Đóng **tất cả** tab thuộc cấu hình |
+  | Bấm rồi thả riêng phím **Ctrl** | Đóng **tất cả** tab thuộc cấu hình, mở tab mồi thay vào |
+  | Bấm **chuột giữa** (con lăn) | Đóng **tất cả** tab thuộc cấu hình, mở tab mồi thay vào |
   | Bấm rồi thả riêng phím **Shift** | Chuyển tab hiện tại sang ChatGPT |
 
-  Các tổ hợp phím như `Ctrl+C`, `Ctrl+V` hay `Shift+A` vẫn dùng bình thường.
+  Các tổ hợp phím như `Ctrl+C`, `Ctrl+V` hay `Shift+A` vẫn dùng bình thường. Đang gõ trong ô nhập liệu thì phím tắt không chạy, tránh bấm nhầm.
+- **Tab mồi & khôi phục:** đóng tab bằng phím tắt sẽ mở ngay một trang mồi (mặc định Google Docs). Muốn mở lại các tab vừa đóng, bấm **↺ Khôi phục tab vừa đóng** trong popup.
+- **Tự tắt tiếng:** tab ngụy trang tự tắt tiếng khi chuyển sang tab khác, bật lại khi quay về. Tab bạn tự tắt tiếng thì giữ nguyên.
 
 ## Cài đặt
 
@@ -59,6 +61,14 @@ Với `match`: `example.*` khớp `example.com`, `example.net`, `www.example.xyz
 
 Sửa `config.js` thì phải vào `chrome://extensions` bấm **Reload**, và chỉ có tác dụng khi chưa lưu rule nào trong popup.
 
+Cuối `config.js` còn vài tuỳ chọn khác:
+
+| Hằng số | Ý nghĩa | Mặc định |
+|---|---|---|
+| `SWITCH_URL` | Trang chuyển tới khi thả riêng phím Shift | `https://chatgpt.com/` |
+| `DECOY_URL` | Trang mồi mở ra khi đóng tab bằng phím tắt. Bỏ trống = không mở | Google Docs |
+| `AUTO_MUTE` | Tự tắt tiếng tab ngụy trang khi chuyển sang tab khác | `true` |
+
 ### Icon có sẵn
 
 | File | Icon |
@@ -76,8 +86,17 @@ Muốn thêm icon, chép file `.png`, `.ico` hoặc `.svg` vào `icons/` rồi g
 ├── manifest.json   # Khai báo extension (Manifest V3)
 ├── config.js       # Danh sách rule
 ├── rules.js        # Logic so khớp URL, dùng chung cho content script và background
-├── content.js      # Đổi tiêu đề/favicon, bắt phím tắt
-├── background.js   # Đóng tab theo yêu cầu từ content script
+├── content.js      # Ghép các module content script
+├── content/
+│   ├── disguise.js       # Đổi + giữ tiêu đề/favicon, trả lại khi bỏ ngụy trang
+│   ├── icon-resolver.js  # Đổi giá trị favicon (file/URL/emoji) thành href
+│   ├── hotkeys.js        # Phím tắt Ctrl/Shift và chuột giữa
+│   └── url-watcher.js    # Bắt SPA đổi URL
+├── background.js   # Ghép các module background, định tuyến tin nhắn
+├── background/
+│   ├── tab-closer.js     # Đóng tab thuộc cấu hình, mở tab mồi
+│   ├── closed-tabs.js    # Nhớ và khôi phục tab vừa đóng
+│   └── auto-mute.js      # Tự tắt/bật tiếng tab
 ├── ui/
 │   ├── style.css       # CSS dùng chung
 │   └── page-popup/     # Bấm icon extension: ngụy trang nhanh + quản lý rule (lưu trong chrome.storage.local)

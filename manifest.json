@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Legend's Tab",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Học tập vì một tương lai tươi sáng",
   "permissions": [
     "tabs",
@@ -15,6 +15,10 @@
       "js": [
         "config.js",
         "rules.js",
+        "content/icon-resolver.js",
+        "content/disguise.js",
+        "content/hotkeys.js",
+        "content/url-watcher.js",
         "content.js"
       ],
       "run_at": "document_start",

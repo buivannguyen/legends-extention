@@ -76,3 +76,12 @@ Promise.all([getRules(), chrome.tabs.query({ active: true, currentWindow: true }
     status.textContent = "Trang này đang được ngụy trang.";
   };
 });
+
+// Khôi phục các tab vừa bị đóng bằng phím tắt
+const restore = document.getElementById("restore");
+chrome.runtime.sendMessage({ type: "closedCount" }).then((count) => {
+  if (!count) return;
+  restore.textContent = `↺ Khôi phục ${count} tab vừa đóng`;
+  restore.hidden = false;
+  restore.onclick = () => chrome.runtime.sendMessage({ type: "restoreClosed" }).then(() => window.close());
+});
