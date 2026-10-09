@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Ô bo góc nền tối: nhìn giống icon công cụ dev, nổi cả trên toolbar sáng và tối -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3d4149"/>
+      <stop offset="1" stop-color="#25282d"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="128" height="128" rx="28" ry="28" fill="url(#tile)"/>
+  <rect x="1" y="1" width="126" height="126" rx="27" ry="27" fill="none" stroke="#ffffff" stroke-opacity="0.09"/>
+  <!-- Dấu code, màu xanh lá lấy từ accent của ui/style.css -->
+  <g fill="none" stroke="#5cb48d" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 46 42 L 26 64 L 46 86"/>
+    <path d="M 82 42 L 102 64 L 82 86"/>
+    <path d="M 72 36 L 56 92"/>
+  </g>
+</svg>
