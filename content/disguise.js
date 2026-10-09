@@ -112,5 +112,8 @@ function createDisguise(iconResolver) {
     restoreFavicon();
   }
 
-  return { enable, disable };
+  // Tiêu đề thật của trang, kể cả khi đang ngụy trang
+  const realTitle = () => (rule?.title ? originalTitle : document.title);
+
+  return { enable, disable, realTitle };
 }

@@ -23,6 +23,16 @@
       ],
       "run_at": "document_start",
       "all_frames": false
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content/video-time.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
     }
   ],
   "icons": {

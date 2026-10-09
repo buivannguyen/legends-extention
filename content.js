@@ -32,5 +32,7 @@
   evaluate();
   getRules().then(update);
   chrome.storage.onChanged.addListener((changes) => changes.rules && update(changes.rules.newValue));
+  // Popup lưu video yêu thích cần tiêu đề thật, tiêu đề tab lúc này là tiêu đề ngụy trang
+  chrome.runtime.onMessage.addListener((msg, sender, reply) => msg?.type === "realTitle" && reply(disguise.realTitle()));
   watchUrl(evaluate);
 })();
