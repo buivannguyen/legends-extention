@@ -19,6 +19,7 @@ Trong thời đại AI phát triển từng ngày, **học tập** là cách t�
 
   Các tổ hợp phím như `Ctrl+C`, `Ctrl+V` hay `Shift+A` vẫn dùng bình thường. Đang gõ trong ô nhập liệu thì phím tắt không chạy, tránh bấm nhầm.
 - **Tab mồi & khôi phục:** đóng tab bằng phím tắt sẽ mở ngay một trang mồi (mặc định Google Docs). Muốn mở lại các tab vừa đóng, bấm **↺ Khôi phục tab vừa đóng** trong popup.
+- **Khoá popup:** danh sách trang trong popup ẩn sẵn, bấm **👁 Hiện danh sách** mới thấy. Đặt **mã PIN** để khoá hẳn: phải nhập đúng mã mới xem/sửa được rule, mở khoá xong tự khoá lại sau 5 phút hoặc khi tắt trình duyệt. Quên mã thì chỉ có cách xoá mã cùng toàn bộ rule. Mã chỉ lưu dạng băm SHA-256, không lưu mã gốc.
 - **Tự tắt tiếng:** tab ngụy trang tự tắt tiếng khi chuyển sang tab khác, bật lại khi quay về. Tab bạn tự tắt tiếng thì giữ nguyên.
 
 ## Cài đặt
@@ -68,6 +69,7 @@ Cuối `config.js` còn vài tuỳ chọn khác:
 | `SWITCH_URL` | Trang chuyển tới khi thả riêng phím Shift | `https://chatgpt.com/` |
 | `DECOY_URL` | Trang mồi mở ra khi đóng tab bằng phím tắt. Bỏ trống = không mở | Google Docs |
 | `AUTO_MUTE` | Tự tắt tiếng tab ngụy trang khi chuyển sang tab khác | `true` |
+| `LOCK_AFTER_MINUTES` | Mở khoá popup bằng mã PIN xong, tự khoá lại sau bấy nhiêu phút | `5` |
 
 ### Icon có sẵn
 
@@ -100,6 +102,7 @@ Muốn thêm icon, chép file `.png`, `.ico` hoặc `.svg` vào `icons/` rồi g
 ├── ui/
 │   ├── style.css       # CSS dùng chung
 │   └── page-popup/     # Bấm icon extension: ngụy trang nhanh + quản lý rule (lưu trong chrome.storage.local)
+│       └── lock.js     # Khoá danh sách rule bằng mã PIN
 └── icons/          # Favicon dùng để ngụy trang
 ```
 
