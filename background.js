@@ -11,17 +11,20 @@ importScripts(
 let rules = RULES;
 let bookmarks = [];
 let autoCloseMinutes = AUTO_CLOSE_AFTER_MINUTES;
+let decoyUrl = DECOY_URL;
 const ready = Promise.all([
   getRules().then((r) => (rules = r)),
   chrome.storage.local.get({ bookmarks: [] }).then((s) => (bookmarks = s.bookmarks)),
   chrome.storage.local
     .get({ autoCloseMinutes: AUTO_CLOSE_AFTER_MINUTES })
-    .then((s) => (autoCloseMinutes = s.autoCloseMinutes))
+    .then((s) => (autoCloseMinutes = s.autoCloseMinutes)),
+  // Chuỗi rỗng là đã chủ động bỏ trống (không mở tab mồi), khác với chưa đặt (dùng DECOY_URL)
+  chrome.storage.local.get({ decoyUrl: DECOY_URL }).then((s) => (decoyUrl = s.decoyUrl))
 ]);
 
 const isTarget = (url) => findRule(rules, url) !== null;
 const closedTabs = createClosedTabs();
-const tabCloser = createTabCloser({ isTarget, getDecoyUrl: () => DECOY_URL, closedTabs });
+const tabCloser = createTabCloser({ isTarget, getDecoyUrl: () => decoyUrl, closedTabs });
 const autoMute = createAutoMute({ isTarget, isEnabled: () => AUTO_MUTE });
 const autoClose = createAutoClose({
   ready,
@@ -72,6 +75,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.bookmarks) bookmarks = changes.bookmarks.newValue || [];
+  if (changes.decoyUrl) decoyUrl = changes.decoyUrl.newValue ?? DECOY_URL;
   if (changes.autoCloseMinutes) {
     autoCloseMinutes = changes.autoCloseMinutes.newValue ?? AUTO_CLOSE_AFTER_MINUTES;
     autoClose.refresh();

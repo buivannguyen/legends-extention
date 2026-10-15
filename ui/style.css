@@ -170,10 +170,26 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #tabs label:has(:checked) { border-color: var(--accent); color: var(--fg); }
 #tabs label:has(:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 6px 6px 0 0; }
 #tabs input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-#rules:has([value="fav"]:checked) #tab-disguise,
-#rules:has([value="disguise"]:checked) #tab-fav { display: none; }
+#tabs label:last-child { margin-left: auto; }
+#rules:not(:has([value="fav"]:checked)) #tab-fav,
+#rules:not(:has([value="disguise"]:checked)) #tab-disguise,
+#rules:not(:has([value="settings"]:checked)) #tab-settings,
+#rules:has([value="settings"]:checked) #auto-close { display: none; }
 
-/* Tự đóng tab, nằm dưới cả hai tab: vòng trạng thái, chữ, số đếm ngược, ô số phút, rồi danh sách tab sẽ bị đóng.
+/* Cài đặt: mỗi mục một dòng, tên + giải thích bên trái, ô nhập hoặc nút bên phải */
+#settings { margin: 0; padding: 0; list-style: none; }
+#settings li { display: flex; align-items: center; gap: 16px; padding: 10px 2px; }
+#settings li + li { border-top: 1px solid var(--line); }
+#settings .name { flex: 1; min-width: 0; display: grid; gap: 1px; font-weight: 500; }
+#settings small { font-size: 12px; font-weight: 400; color: var(--muted); }
+#settings input { flex: none; width: 240px; }
+#settings input[type="number"] { width: 64px; text-align: center; }
+#settings input[type="url"] { font: 12px var(--mono); }
+#settings input[aria-invalid] { border-color: var(--danger); }
+#settings .actions { display: flex; gap: 6px; }
+#settings button { padding: 6px 10px; font-size: 12px; }
+
+/* Trạng thái tự đóng tab, nằm dưới tab Yêu thích và Ngụy trang: vòng trạng thái, chữ, số đếm ngược, rồi danh sách tab sẽ bị đóng.
    --tone đổi màu theo trạng thái, --gone là phần trăm thời gian đã trôi */
 #auto-close {
   --tone: var(--muted);
@@ -228,17 +244,6 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   transition: color 0.4s var(--ease);
 }
 #auto-close:not([data-state="idle"]) #auto-close-count { display: none; }
-#auto-close label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding-left: 12px;
-  border-left: 1px solid var(--line);
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-}
-#auto-close input { width: 56px; text-align: center; color: var(--fg); }
 
 /* Danh sách tab sẽ bị đóng: chấm xanh là tab đang xem, tên miền mờ bên phải */
 #open-tabs { margin: 0; padding: 0; list-style: none; }
@@ -294,7 +299,7 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #lock-submit { flex: none; border-color: transparent; background: var(--accent); color: var(--on-accent); font-weight: 500; }
 #lock:has(#pin[hidden]) #lock-submit { flex: 1; }
 #lock .link { margin-top: 6px; }
-/* Chân popup: khôi phục tab bên trái, link khoá/PIN bên phải (chỉ hiện khi đã mở khoá) */
+/* Chân popup: khôi phục tab bên trái, link khoá bên phải (chỉ hiện khi đã mở khoá) */
 body > footer { display: flex; align-items: center; gap: 4px; margin-top: 12px; padding-top: 6px; border-top: 1px solid var(--line); }
 #pin-links { display: flex; gap: 4px; margin-left: auto; }
 body:has(#rules[hidden]) #pin-links { display: none; }

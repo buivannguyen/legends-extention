@@ -28,6 +28,7 @@
   <nav id="tabs">
     <label><input type="radio" name="tab" value="fav" checked>★ Yêu thích</label>
     <label><input type="radio" name="tab" value="disguise">Ngụy trang</label>
+    <label><input type="radio" name="tab" value="settings">⚙ Cài đặt</label>
   </nav>
   <div id="tab-fav">
     <ul id="bookmarks"></ul>
@@ -38,6 +39,26 @@
       <tbody></tbody>
     </table>
     <button id="add">+ Thêm rule</button>
+  </div>
+  <div id="tab-settings">
+    <!-- Thêm cài đặt mới: thêm một <li> gồm .name (tên + giải thích) và một ô nhập/nút -->
+    <ul id="settings">
+      <li>
+        <label class="name" for="auto-close-minutes">Tự đóng tab<small>Số phút không dùng tab ngụy trang nào thì đóng hết các tab đó. 0 = tắt</small></label>
+        <input id="auto-close-minutes" type="number" min="0" step="1">
+      </li>
+      <li>
+        <label class="name" for="decoy-url">Trang mồi<small id="decoy-hint">Mở thay vào khi đóng tab bằng chuột giữa hoặc phím Ctrl. Bỏ trống = không mở</small></label>
+        <input id="decoy-url" type="url" spellcheck="false" autocomplete="off">
+      </li>
+      <li>
+        <span class="name">Mã PIN<small>Khoá danh sách trang, video yêu thích và cài đặt</small></span>
+        <span class="actions">
+          <button id="set-pin"></button>
+          <button id="remove-pin" hidden>Bỏ mã PIN</button>
+        </span>
+      </li>
+    </ul>
   </div>
   <div id="auto-close">
     <div class="status">
@@ -53,11 +74,6 @@
       </div>
       <p><strong id="auto-close-title"></strong><span id="auto-close-sub"></span></p>
       <output id="auto-close-count"></output>
-      <label>
-        Tự đóng sau
-        <input id="auto-close-minutes" type="number" min="0" step="1" title="Số phút không dùng tab ngụy trang nào. 0 = tắt">
-        phút
-      </label>
     </div>
     <ul id="open-tabs"></ul>
   </div>
@@ -66,8 +82,6 @@
   <button id="restore" class="link" hidden></button>
   <span id="pin-links">
     <button id="lock-now" class="link"></button>
-    <button id="set-pin" class="link"></button>
-    <button id="remove-pin" class="link" hidden>Bỏ mã PIN</button>
   </span>
 </footer>
 <div id="icons" popover>

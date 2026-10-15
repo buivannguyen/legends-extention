@@ -243,7 +243,10 @@ forgot.onclick = () => {
   forgot.textContent = "Bấm lần nữa để xoá mã PIN, toàn bộ rule và video yêu thích";
 };
 
-// Số phút không dùng trước khi tự đóng tab, background đọc lại ngay khi lưu
+// Tab Cài đặt: mỗi ô nhập lưu thẳng vào chrome.storage.local khi đổi xong, background đọc lại ngay.
+// Chưa lưu thì dùng giá trị mặc định trong config.js
+
+// Số phút không dùng trước khi tự đóng tab
 const autoCloseInput = document.getElementById("auto-close-minutes");
 chrome.storage.local
   .get({ autoCloseMinutes: AUTO_CLOSE_AFTER_MINUTES })
@@ -254,6 +257,22 @@ autoCloseInput.onchange = () => {
   chrome.storage.local.set({ autoCloseMinutes: minutes }).then(showAutoClose);
 };
 
+// Trang mồi: mở thay vào khi đóng tab bằng phím tắt. Bỏ trống = không mở. Gõ thiếu "https://" thì tự thêm
+const decoyInput = document.getElementById("decoy-url");
+const decoyHint = document.getElementById("decoy-hint");
+const decoyHintText = decoyHint.textContent;
+chrome.storage.local.get({ decoyUrl: DECOY_URL }).then((s) => (decoyInput.value = s.decoyUrl));
+decoyInput.onchange = () => {
+  const text = decoyInput.value.trim();
+  const url = text && URL.parse(/^[a-z][a-z\d+.-]*:\/\//i.test(text) ? text : `https://${text}`);
+  const invalid = text && !/^https?:$/.test(url?.protocol);
+  decoyInput.toggleAttribute("aria-invalid", !!invalid);
+  decoyHint.textContent = invalid ? "Địa chỉ không hợp lệ, cần dạng https://example.com" : decoyHintText;
+  if (invalid) return;
+  decoyInput.value = url ? url.href : "";
+  chrome.storage.local.set({ decoyUrl: decoyInput.value });
+};
+
 // Tự đóng tab: hỏi background mỗi giây xem có tab ngụy trang nào đang được dùng không, còn bao lâu thì đóng hết
 const autoClose = document.getElementById("auto-close");
 const autoCloseTitle = document.getElementById("auto-close-title");
@@ -261,7 +280,7 @@ const autoCloseSub = document.getElementById("auto-close-sub");
 const autoCloseCount = document.getElementById("auto-close-count");
 const openTabs = document.getElementById("open-tabs");
 const AUTO_CLOSE_TEXT = {
-  off: ["Đang tắt tự đóng", "Nhập số phút lớn hơn 0 để bật."],
+  off: ["Đang tắt tự đóng", "Đặt số phút lớn hơn 0 trong tab Cài đặt để bật."],
   none: ["Không có tab ngụy trang nào đang mở", "Mở trang thuộc danh sách thì bắt đầu theo dõi."],
   active: ["Đang dùng", "Rời các tab này hoặc ngừng thao tác 15 giây thì bắt đầu đếm."],
   idle: ["Không hoạt động", ""]
